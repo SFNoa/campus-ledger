@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.EcardLedger">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.EcardLedger">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+              账单导入：让本 App 出现在「打开方式 / 分享」里。
+              这样在邮箱里点开账单附件（csv 或 zip）就能直接选「我的账本」，
+              不用先下载到文件夹再回来找 —— 这是整个导入流程里最省事的一步。
+
+              用 ACTION_VIEW（"打开方式"）而不是只做 ACTION_SEND：
+              邮件客户端对附件的默认操作是 VIEW。
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content" />
+                <data android:mimeType="text/csv" />
+                <data android:mimeType="text/comma-separated-values" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/x-zip-compressed" />
+                <data android:mimeType="application/vnd.ms-excel" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/octet-stream" />
+                <!-- 账单文件名带 .csv / .zip 时兜住（有些客户端把类型报成 octet-stream） -->
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.csv" />
+                <data android:pathPattern=".*\\.zip" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/csv" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          通知监听服务：自动记录微信/支付宝收支。
+          权限组合说明：
+           - android:permission="...BIND_NOTIFICATION_LISTENER_SERVICE" 保证只有系统能绑定它
+           - android:exported="true" 是必须的：绑定方是系统（另一个 UID），
+             但因为有上面那条权限，普通应用无法绑定
+           - 用户必须在「设置 → 通知使用权」里手动授权，App 无法自行开启
+        -->
+        <service
+            android:name=".notification.PaymentNotificationService"
+            android:label="@string/notification_service_label"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

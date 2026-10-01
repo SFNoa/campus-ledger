@@ -1,0 +1,22 @@
+﻿# 构建产物
+build/
+.gradle/
+.kotlin/
+*.apk
+*.aab
+*.log
+
+# 本机配置（含你的 SDK 路径）
+local.properties
+
+# ⚠️⚠️ 签名密钥与口令：绝对不能进版本库
+# 传上去等于把 App 的"公章"公开 —— 别人可以签出和你一模一样的更新包
+keystore/
+*.jks
+*.keystore
+keystore.properties
+
+# IDE / 系统
+.idea/
+*.iml
+.DS_Store

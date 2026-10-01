@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 用平台主题作为宿主，Compose 自己负责全部外观，避免额外依赖 material 组件库 -->
+    <style name="Theme.EcardLedger" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <!-- 全面屏：内容一直画到屏幕边缘（含状态栏/刘海下面），insets 由 Compose 各页自己处理。
+             不设这个的话，有挖孔屏的机器（如 Redmi Note 14 Pro+）顶部会留一条空白。 -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <!-- 状态栏/导航栏必须**透明**：之前那条 windowDrawsSystemBarBackgrounds=false
+             让系统不画栏底、又没给透明色，结果顶部成了一条黑边（真机反馈）。 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>
