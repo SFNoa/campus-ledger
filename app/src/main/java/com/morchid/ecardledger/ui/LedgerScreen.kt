@@ -1,4 +1,4 @@
-﻿package com.morchid.ecardledger.ui
+package com.morchid.ecardledger.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -81,7 +82,9 @@ fun LedgerScreen(
     var editing by remember { mutableStateOf<LedgerEntry?>(null) }
     var showAdd by remember { mutableStateOf(false) }
     var bulkMode by remember { mutableStateOf(false) }
-    val selected = remember { mutableListOf<String>() }
+    // 必须用 mutableStateListOf：普通的 mutableListOf 改了不会通知 Compose，
+    // 于是"点了勾没反应，切一下筛选才显示"（真机反馈的 bug）
+    val selected = remember { mutableStateListOf<String>() }
     var confirmDelete by remember { mutableStateOf(false) }
     /** 单条删除的二次确认对象 */
     var pendingSingleDelete by remember { mutableStateOf<LedgerEntry?>(null) }
